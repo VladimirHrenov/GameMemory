@@ -37,6 +37,7 @@ const openCart = (e) => {
         fasOpenCarts = false;
         secondCart = target;
 
+
         checkCart();
     }
     
@@ -46,11 +47,16 @@ const checkCart = () => {
     if (firstCart.dataset.image === secondCart.dataset.image) {
         firstCart.removeEventListener('click', openCart);
         secondCart.removeEventListener('click', openCart);
+    if (firstCart.dataset.image !== secondCart.dataset.image) {
+        setTimeout(() => {
+            firstCart.removeEventListener('click',openCart)
+        }, 600)
+    }
     } else {
         setTimeout (() => {
             firstCart.classList.remove('_active');
             secondCart.classList.remove('_active');
-        }, 1000)
+        }, 500)
 
 
     }
