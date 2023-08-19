@@ -1,55 +1,67 @@
-class Cart {
-    constructor (container,carts,random) {
-        this.container = container;
-        this.carts = carts;
-        this.random = random;
-        
-    }
-    open() {
-            this.back.classList.add('active');
-            this.front.classList.add('active');
-        }
-    close() {
-            this.front.classList.remove('active');
-            this.back.classList.remove('active');
-        }
-    clicked() {
+let fasOpenCarts = false;
+let firstCart, secondCart;  // первая, вторая
 
-    }    
-        
+
+
+class Cart {
+    constructor (container,randomBtn,coloda,check) {
+        this.container = container;
+        this.randomBtn = randomBtn;
+        this.coloda = coloda;
+        this.check = check;
+        }
+
+
+    
+    open(event) {
+        let target = event.target.parentElement;
+        target.classList.add('_active');  
+        if(fasOpenCarts == false) {
+            fasOpenCarts = true;
+            firstCart = target;
+        } else {
+            fasOpenCarts = false;
+            secondCart = target;
+
+            checkCart();
+        }
+    }
+
+    shuffleDOMElements(parentNode) {
+        let elements = Array.from(parentNode.children);
+        for (let i = elements.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            parentNode.insertBefore(elements[j], elements[i]);
+        }};
+    
+    reloadColoda() {
+        location.reload()
+    }
 }
+
+
 
 
 const containerCarts = document.querySelector('.container');
 const divCart = document.querySelectorAll('.cart');
 const btnRandom = document.querySelector('.btn');
 
-let fasOpenCarts = false;
-let firstCart, secondCart  // первая, вторая
 
-const openCart = (e) => {
-    const target = e.target.parentElement;
-    target.classList.add('_active');    
-    if(fasOpenCarts == false) {
-        fasOpenCarts = true;
-        firstCart = target;
-    } else {
-        fasOpenCarts = false;
-        secondCart = target;
+const game = new Cart(containerCarts,btnRandom,divCart);
 
 
-        checkCart();
-    }
-    
-};
+
+
+game.shuffleDOMElements(game.container); // обновление страницы
+
 
 const checkCart = () => {
     if (firstCart.dataset.image === secondCart.dataset.image) {
-        firstCart.removeEventListener('click', openCart);
-        secondCart.removeEventListener('click', openCart);
+        firstCart.removeEventListener('click', open);
+        secondCart.removeEventListener('click', open);
     if (firstCart.dataset.image !== secondCart.dataset.image) {
         setTimeout(() => {
-            firstCart.removeEventListener('click',openCart)
+            firstCart.removeEventListener('click',open)
         }, 600)
     }
     } else {
@@ -57,30 +69,14 @@ const checkCart = () => {
             firstCart.classList.remove('_active');
             secondCart.classList.remove('_active');
         }, 500)
-
-
     }
 }
 
-divCart.forEach(cart => {
-    cart.addEventListener('click', openCart);
+game.coloda.forEach(cart => {
+    cart.addEventListener('click', game.open);
 })
 
-function refreshPage() {
-    location.reload()
-}
-
-function shuffleDOMElements(parentNode) {
-    let elements = Array.from(parentNode.children);
-    for (let i = elements.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        parentNode.insertBefore(elements[j], elements[i]);
-    }} // рандом
-shuffleDOMElements(containerCarts);
-
-btnRandom.addEventListener('click', refreshPage) //обновление страницы
-
-console.log(containerCarts.children);
+game.randomBtn.addEventListener('click', game.reloadColoda);
 
 
 
